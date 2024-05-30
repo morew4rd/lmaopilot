@@ -1,7 +1,7 @@
 {
   "name": "lmaopilot",
-  "displayName": "lmaopilot",
-  "description": "LMAO pilot",
+  "displayName": "LMAO Pilot",
+  "description": "LMAO Pilot",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.89.0"
@@ -17,4 +17,5 @@
       "title": "Hello World"
     }]
   }
+
 }
