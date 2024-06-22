@@ -14,8 +14,8 @@
   "repository": {"url": "https://github.com/morew4rd/lmaopilot"},
   "contributes": {
     "commands": [{
-      "command": "lmaopilot.lmao",
-      "title": "LMAO"
+      "command": "lmaopilot.lmao_selection",
+      "title": "LMAO selection"
     }]
   }
 
