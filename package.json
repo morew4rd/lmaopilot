@@ -11,10 +11,11 @@
   ],
   "activationEvents": [],
   "main": "./extension.js",
+  "repository": {"url": "https://github.com/morew4rd/lmaopilot"},
   "contributes": {
     "commands": [{
-      "command": "lmaopilot.helloWorld",
-      "title": "Hello World"
+      "command": "lmaopilot.lmao",
+      "title": "LMAO"
     }]
   }
 
