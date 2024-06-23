@@ -1,20 +1,20 @@
-# LMAO Pilot README
 
-LMAO Pilot is barebones single-file LLM "copilot" for VSCode.
+# LMAO Pilot README
+LMAO Pilot is a barebones "DIY" style single-file LLM "copilot" for VSCode.
 
 This is for my personal use, but you can take it and make it your own. Feel free to send PRs!
 
 ## Install?
 
-You'll need to build this yourself. Run `make` (or directly: `npx vsce package`).  Unfortunately, you need `node` and `npx`.
+DIY
 
-Output should be a `.vsix` file which you can install with `Extensions: Install from VSIX` command.
-
-Manually update the endpoint as needed. Default: `https://localhost:8080` and it's hardcoded lmao.
+- Manually update the endpoint as needed. Default: `https://localhost:8080` and it's hardcoded in `extension.js` file, at the top.
+- You'll need to build this yourself. Run `make` (or directly: `npx vsce package`).  Unfortunately, you need `node` and `npx`.
+- Output should be a `.vsix` file which you can install with `Extensions: Install from VSIX` command.
 
 ## Use?
 
-Open a file and type some prompt text/code. Select it and run "LMAO selection" command.  If nothing is selected, whole file is used.
+Open a file and type some prompt text/code. Select it and run "LMAO" command.  If nothing is selected, whole file is used.
 
 LLM completions will be added at the end of the file.
 
