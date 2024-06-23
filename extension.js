@@ -1,11 +1,10 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-let vscode = require('vscode');
 
 /////////////////////////////////////////////////
-/////////////////////////////////////////////////
 
-// from: https://github.com/ggerganov/llama.cpp/blob/master/examples/server/public/completion.js
+const defaultEndpoint = "http://localhost:8080";
+const defaultNumPredictions = 800;
+
+// completions.js part, copied from: https://github.com/ggerganov/llama.cpp/blob/master/examples/server/public/completion.js
 
 const paramDefaults = {
     stream: true,
@@ -30,7 +29,7 @@ const paramDefaults = {
   //
   async function* llama(prompt, params = {}, config = {}) {
     let controller = config.controller;
-    const api_url = config.api_url || "http://localhost:8080";
+    const api_url = config.api_url || defaultEndpoint;
     console.log(api_url)
     if (!controller) {
       controller = new AbortController();
@@ -214,44 +213,30 @@ const paramDefaults = {
 
 
 /////////////////////////////////////////////////
-/////////////////////////////////////////////////
 
+// The module 'vscode' contains the VS Code extensibility API
+// Import the module and reference it with the alias vscode in your code below
+let vscode = require('vscode');
+
+function scroll_to_end() {
+  const editor = vscode.window.activeTextEditor;
+  const lineCount = editor.document.lineCount;
+  const range = editor.document.lineAt(lineCount - 1).range;
+  editor.selection = new vscode.Selection(range.end, range.end);
+  editor.revealRange(range);
+}
 
 
 async function send_to_api(message, onchunk) {
-  let endpoint = 'http://localhost:8080'
-	const request = llama(message, {n_predict: 800, api_url:endpoint})
-     for await (const chunk of request) {
-    //    document.write(chunk.data.content)
-		onchunk(chunk.data.content)
-     }
+	const request = llama(message, {n_predict: defaultNumPredictions })
+    for await (const chunk of request) {
+		  onchunk(chunk.data.content)
+    }
 }
 
-// async function send_to_api_2(message) {
-//     let payload = JSON.stringify({ prompt: message, n_predict: 512, }); // adjust based on your server's API specification
-
-//     try {
-//       let response = await fetch(`${endpoint}/completion`, {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json'
-//         },
-//         body: payload
-//       });
-
-//       if (!response.ok) throw new Error('Network response was not ok');
-
-//       let data = await response.json();
-// 	  let completions = data.content;
-//       return completions; // this should be your chatbot's reply
-//     } catch (error) {
-//       console.error('There has been a problem with your fetch operation:', error);
-// 	  throw error;
-//     }
-// }
-
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+function m_log(t) {
+  // console.log(t)
+}
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -260,12 +245,12 @@ async function activate(context) {
 
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "lmaopilot" is now active!');
+	m_log('lmaopilot is now active!');
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with  registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('lmaopilot.lmao_selection', function () {
+	let disposable = vscode.commands.registerCommand('lmaopilot.lmao', function () {
 		// The code you place here will be executed every time your command is executed
 
 		// Insert text at the current cursor position
@@ -274,33 +259,18 @@ async function activate(context) {
 			vscode.window.showInformationMessage('LMAO NO FILE');
 				return;
 		} else {
-			let selection = editor.selection;
-			let text = editor.document.getText(selection);
-			text = text || "hello"
-
+			let text = editor.document.getText(editor.selection);
+			text = text || editor.document.getText() || "/* HELLO WHAT'S THE PROMPT BUDDY? */";
+      m_log("LMAO SENDING TEXT: " + text);
 			send_to_api(text, (x) => {
-				console.log(x)
-				// vscode.window.showInformationMessage('OUT:' + x);
-				let position = editor.selection.active;
+				m_log("LMAO RECV CHUNK: " + x);
+        text = editor.document.getText();
+        const endpos =  editor.document.positionAt(text.length);
 				editor.edit(edit => {
-					edit.insert(position, "" + x);
+					edit.insert(endpos, "" + x);
 				});
+        scroll_to_end();
 			});
-
-			// send_to_api_2(text).then((x) => {
-			// 	console.log(x)
-			// 	// vscode.window.showInformationMessage('OUT:' + x);
-			// 	let position = editor.selection.active;
-			// 	editor.edit(edit => {
-			// 		edit.insert(position, "\n----->\n" + x);
-			// 	});
-			// })
-
-			// let position = editor.selection.active;
-			// editor.edit(edit => {
-			// 	edit.insert(position, "\n----->\n" + output);
-			// });
-			// vscode.window.showInformationMessage('LMAO FILE');
 		}
 	});
 

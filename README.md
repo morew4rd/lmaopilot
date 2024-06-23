@@ -1,16 +1,31 @@
 # LMAO Pilot README
 
-LMAO Pilot is a simple, single-file AI co-pilot for VSCode.
+LMAO Pilot is barebones single-file LLM "copilot" for VSCode.
 
-## How
+This is for my personal use, but you can take it and make it your own. Feel free to send PRs!
 
-Create a file called `lmao.md`
+## Install?
 
-## Settings
+You'll need to build this yourself. Run `make` (or directly: `npx vsce package`).  Unfortunately, you need `node` and `npx`.
 
-This extension contributes the following settings:
+Output should be a `.vsix` file which you can install with `Extensions: Install from VSIX` command.
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+Manually update the endpoint as needed. Default: `https://localhost:8080` and it's hardcoded lmao.
+
+## Use?
+
+Open a file and type some prompt text/code. Select it and run "LMAO selection" command.  If nothing is selected, whole file is used.
+
+LLM completions will be added at the end of the file.
+
+## Gotchas?
+
+Mainly barebones functionality and rough edges.
+
+- Hardcoded defaults
+- Minimal error checking
+- No way to stop the LLM while it's working
+- If you change the active document (i.e. going to another tab, closing the doc etc.) process will fail.
+- Only tested with local llama.cpp server OpenAI endpoint. Should work with other OpenAI compatible endpoints, but not tested.
 
 **Enjoy!**
